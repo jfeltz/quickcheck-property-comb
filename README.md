@@ -24,7 +24,7 @@ fooInvariants f =
 ```
 
 This gets unwieldy fast as the complexity of the data-structure increases, so
-quickcheck-property-comb monidically allows the composition of invariants and 
+quickcheck-property-comb monadically allows the composition of invariants and 
 the documenting of those invariants for determining cause of failure.
 
 Example use
