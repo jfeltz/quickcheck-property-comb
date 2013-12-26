@@ -12,6 +12,8 @@ description:
   for invariants with changing post-conditions, leading to a
   faster cause-of-failure diagnosis.
   .
+  Example case for invariants on a data structure "Consumers".
+  .
   > data (Ord l) => Consumers l =
   >   Consumers {
   >     introduced :: S.Set l,
@@ -46,12 +48,12 @@ description:
   > disjoints_inv= do
   >   sat disjoints_eq
   >   sat disjoints_sizes
-  >
+  > 
   > inv_consumers :: Invariants (Consumers l)
   > inv_consumers = do
   >   satcomp disjoints disjoints_inv
   >   satcomp met met_inv
-  >   sat at_quantity_in_disjoint
+  >   sat introduced_in_disjoint
   . 
   And to run the Consumer invariant on generated cases: 
   .
