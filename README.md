@@ -18,7 +18,7 @@ inv1, inv2, inv3 :: Foo -> Bool
 fooInvariants :: Foo -> Property 
 fooInvariants f = 
     conjoin . map property $ 
-      conjoin $ zipWith toPrintTestCase
+      conjoin $ zipWith printTestCase
         ["foo should be even", "foo should contain 3 bar", "all bar should not equal foo"] 
         [inv1 f, inv2 f, inv3 f]
 ```
@@ -69,9 +69,9 @@ See example in cabal package description.
      sat introduced_in_disjoint
 ```
   And to run the invariants on generated cases:
-```
+```haskell
   prop_testedFunction :: Arg -> Property
   prop_testedFunction arg = 
-  let consumers = testedFunction arg in
-  runInvariants consumers inv_consumers
+    let consumers = testedFunction arg in
+      runInvariants consumers inv_consumers
 ```
