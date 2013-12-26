@@ -18,17 +18,60 @@ inv1, inv2, inv3 :: Foo -> Bool
 fooInvariants :: Foo -> Property 
 fooInvariants f = 
     conjoin . map property $ 
-      conjoin $ zipWith toLabeled
+      conjoin $ zipWith toPrintTestCase
         ["foo should be even", "foo should contain 3 bar", "all bar should not equal foo"] 
         [inv1 f, inv2 f, inv3 f]
 ```
 
 This gets unwieldy fast as the complexity of the data-structure increases, so
-quickcheck-property-comb provides the following:
-  - Monadically unifies composition of invariants and the documenting of those invariants for determining cause of failure.
-  - Effective diagnostics for invariants with changing post-conditions,
-    leading to <b>faster cause-of-failure diagnosis</b>.
+quickcheck-property-comb monidically allows the composition of invariants and 
+the documenting of those invariants for determining cause of failure.
 
 Example use
 -----------
 See example in cabal package description.
+```haskell
+   data (Ord l) => Consumers l =
+     Consumers {
+       introduced :: S.Set l,
+       met :: M.Map (S.Set l) Bool,
+       disjoints :: Disjoints l
+     }
+  
+   disjoints_odds ::  Inv (Disjoints l)
+   disjoints_odds = do
+    doc "no odd sets in disjoints"
+    disjoint_sets <- cause 
+    ..
+    return False
+  
+   disjoints_non_singletons :: Inv (Disjoints l)
+   disjoints_non_singletons = do
+     ..
+     return True
+  
+   disjoints_inv :: Invariants (Disjoints l)
+   disjoints_inv= do
+     sat disjoints_odds
+     sat disjoints_non_singletons
+  
+   introduced_in_disjoint :: Inv (Consumers l)
+   introduced_in_disjoint = do
+     doc "all at quantity are a singleton subset in disjoints"
+     subsets       <- (map S.singleton) . S.toList . introduced <$> cause
+     disjoint_sets <- disjoints <$> cause
+     return . and . map ((flip S.member) disjoint_sets) $ subsets
+   
+   inv_consumers :: Invariants (Consumers l)
+   inv_consumers = do
+     satcomp disjoints disjoints_inv
+     satcomp met met_inv
+     sat introduced_in_disjoint
+```
+  And to run the invariants on generated cases:
+```
+  prop_testedFunction :: Arg -> Property
+  prop_testedFunction arg = 
+  let consumers = testedFunction arg in
+  runInvariants consumers inv_consumers
+```
