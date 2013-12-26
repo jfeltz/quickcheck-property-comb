@@ -18,18 +18,17 @@ inv1, inv2, inv3 :: Foo -> Bool
 fooInvariants :: Foo -> Property 
 fooInvariants f = 
     conjoin . map property $ 
-      conjoin $ zipWith toPrintTestCase
+      conjoin $ zipWith printTestCase
         ["foo should be even", "foo should contain 3 bar", "all bar should not equal foo"] 
         [inv1 f, inv2 f, inv3 f]
 ```
 
 This gets unwieldy fast as the complexity of the data-structure increases, so
-quickcheck-property-comb monidically allows the composition of invariants and 
+quickcheck-property-comb monadically allows the composition of invariants and 
 the documenting of those invariants for determining cause of failure.
 
 Example use
 -----------
-See example in cabal package description.
 ```haskell
    data (Ord l) => Consumers l =
      Consumers {
@@ -70,9 +69,9 @@ See example in cabal package description.
      sat introduced_in_disjoint
 ```
   And to run the invariants on generated cases:
-```
+```haskell
   prop_testedFunction :: Arg -> Property
   prop_testedFunction arg = 
-  let consumers = testedFunction arg in
-  runInvariants consumers inv_consumers
+    let consumers = testedFunction arg in
+      runInvariants consumers inv_consumers
 ```
