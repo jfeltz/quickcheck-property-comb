@@ -29,7 +29,6 @@ the documenting of those invariants for determining cause of failure.
 
 Example use
 -----------
-See example in cabal package description.
 ```haskell
    data (Ord l) => Consumers l =
      Consumers {
