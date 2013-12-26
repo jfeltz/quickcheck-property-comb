@@ -2,7 +2,7 @@
 -- further documentation, see http://haskell.org/cabal/users-guide/
 
 name:                quickcheck-property-comb
-version:             0.1.0.1
+version:             0.1.0.2
 synopsis:            Combinators for Quickcheck Property construction and diagnostics
 description:         
   These are simple monads that aim to reduce the pain of composing
@@ -12,7 +12,7 @@ description:
   for invariants with changing post-conditions, leading to a
   faster cause-of-failure diagnosis.
   .
-  Example case for invariants on a data structure Consumers.
+  Example case for invariants on a data structure Consumers:
   .
   > data (Ord l) => Consumers l =
   >   Consumers {
