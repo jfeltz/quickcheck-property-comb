@@ -60,6 +60,7 @@ See example in cabal package description.
      doc "all at quantity are a singleton subset in disjoints"
      subsets       <- (map S.singleton) . S.toList . introduced <$> cause
      disjoint_sets <- disjoints <$> cause
+     doc $ "  failing sets:" ++ show disjoint_sets
      return . and . map ((flip S.member) disjoint_sets) $ subsets
    
    inv_consumers :: Invariants (Consumers l)
